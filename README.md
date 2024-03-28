@@ -1,16 +1,24 @@
-# bank_sha
+# E-Wallet (BWA)
+## Build With
+this application build with a few technology, whice is:
 
-A new Flutter project.
+- Emulator Android Studio 
+- Dart 
+- Flutter
+- Http
+- MVVM
+- Bloc
+- Flutter Secure Sotrage
+- Url Launcher
+  
+## Features
 
-## Getting Started
+A few features, which is:
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Login and Registration With JWT
+- Create Automatic Digital Cards
+- Set & Edit Pin Transaction
+- Topup Balance With Url Midtrans
+- Transfer With Username
+- Buy Data Provider
+- History Transactions

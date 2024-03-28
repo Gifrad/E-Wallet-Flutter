@@ -37,6 +37,7 @@ macos/
 test/
 web/
 windows/
+.vscode/
 
 # Symbolication related
 app.*.symbols

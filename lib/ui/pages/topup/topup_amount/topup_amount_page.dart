@@ -1,0 +1,279 @@
+import 'package:bank_sha/blocs/auth/auth_bloc.dart';
+import 'package:bank_sha/blocs/top_up/top_up_bloc.dart';
+import 'package:bank_sha/models/transaction/top_up_form_model.dart';
+import 'package:bank_sha/shared/shared_method.dart';
+import 'package:bank_sha/shared/theme.dart';
+import 'package:bank_sha/ui/pages/pin/widget/pin_input_button.dart';
+import 'package:bank_sha/ui/widgets/custom_filled_button.dart';
+import 'package:bank_sha/ui/widgets/custom_text_button.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
+class TopupAmountPage extends StatefulWidget {
+  const TopupAmountPage({super.key});
+
+  @override
+  State<TopupAmountPage> createState() => _TopupAmountPageState();
+}
+
+class _TopupAmountPageState extends State<TopupAmountPage> {
+  late TextEditingController amountController;
+
+  @override
+  void initState() {
+    amountController = TextEditingController(text: '0');
+
+    amountController.addListener(() {
+      final text = amountController.text;
+
+      if (amountController.value.text.isNotEmpty) {
+        amountController.value = amountController.value.copyWith(
+          text: NumberFormat.currency(
+            locale: 'id',
+            decimalDigits: 0,
+            symbol: '',
+          ).format(
+            int.parse(
+              text.replaceAll('.', ''),
+            ),
+          ),
+        );
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    amountController.dispose();
+    super.dispose();
+  }
+
+  void addAmount(String number) {
+    if (amountController.text == '0') {
+      amountController.text = '';
+    }
+    setState(() {
+      amountController.text = amountController.text + number;
+    });
+  }
+
+  void deleteAmount() {
+    if (amountController.text.isNotEmpty) {
+      setState(() {
+        amountController.text = amountController.text.substring(
+          0,
+          amountController.text.length - 1,
+        );
+        if (amountController.text == '') {
+          amountController.text = '0';
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as TopupFormModel;
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: darkBackgroundColor,
+      body: BlocConsumer<TopUpBloc, TopUpState>(
+        listener: (context, state) async {
+          if (state is TopUpFailed) {
+            customSnackBar(context, state.e);
+          }
+
+          if (state is TopUpSuccess) {
+            await launchUrlString(state.redirectUrl);
+
+            if (mounted) {}
+            context.read<AuthBloc>().add(
+                  AuthUpdateBalance(
+                    amountController.text.replaceAll('.', ''),
+                  ),
+                );
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/topup-success', (route) => false);
+          }
+        },
+        builder: (context, state) {
+          return ListView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 58,
+            ),
+            children: [
+              const SizedBox(
+                height: 36,
+              ),
+              Center(
+                child: Text(
+                  'Total Amount',
+                  style: whiteTextStyle.copyWith(
+                    fontSize: 20,
+                    fontWeight: semibold,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 67,
+              ),
+              Align(
+                child: SizedBox(
+                  width: 200,
+                  child: TextFormField(
+                    controller: amountController,
+                    enabled: false,
+                    cursorColor: greyColor,
+                    style: whiteTextStyle.copyWith(
+                      fontSize: 36,
+                      fontWeight: medium,
+                    ),
+                    decoration: InputDecoration(
+                      prefixIcon: Text(
+                        'Rp ',
+                        style: whiteTextStyle.copyWith(
+                          fontSize: 36,
+                          fontWeight: medium,
+                        ),
+                      ),
+                      disabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: greyColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 66,
+              ),
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 40,
+                runSpacing: 40,
+                children: [
+                  PinInputButton(
+                    title: '1',
+                    onTap: () {
+                      addAmount('1');
+                    },
+                  ),
+                  PinInputButton(
+                    title: '2',
+                    onTap: () {
+                      addAmount('2');
+                    },
+                  ),
+                  PinInputButton(
+                    title: '3',
+                    onTap: () {
+                      addAmount('3');
+                    },
+                  ),
+                  PinInputButton(
+                    title: '4',
+                    onTap: () {
+                      addAmount('4');
+                    },
+                  ),
+                  PinInputButton(
+                    title: '5',
+                    onTap: () {
+                      addAmount('5');
+                    },
+                  ),
+                  PinInputButton(
+                    title: '6',
+                    onTap: () {
+                      addAmount('6');
+                    },
+                  ),
+                  PinInputButton(
+                    title: '7',
+                    onTap: () {
+                      addAmount('7');
+                    },
+                  ),
+                  PinInputButton(
+                    title: '8',
+                    onTap: () {
+                      addAmount('8');
+                    },
+                  ),
+                  PinInputButton(
+                    title: '9',
+                    onTap: () {
+                      addAmount('9');
+                    },
+                  ),
+                  const SizedBox(
+                    height: 60,
+                    width: 60,
+                  ),
+                  PinInputButton(
+                    title: '0',
+                    onTap: () {
+                      addAmount('0');
+                    },
+                  ),
+                  InkWell(
+                    onTap: () {
+                      deleteAmount();
+                    },
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60),
+                          color: numberBackgroundColor),
+                      child: Center(
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: whiteColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              CustomFilledButton(
+                title: 'Checkout Now',
+                onPressed: () async {
+                  if (await Navigator.pushNamed(context, '/pin') == true) {
+                    final authState = context.read<AuthBloc>().state;
+                    String pin = '';
+                    if (authState is AuthSuccess) {
+                      pin = authState.user.pin!;
+                    }
+
+                    context.read<TopUpBloc>().add(TopupPost(args.copyWith(
+                          pin: pin,
+                          amount: amountController.text.replaceAll('.', ''),
+                        )));
+                  }
+                },
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              CustomTextButton(
+                title: 'Terms & Conditions',
+                onPressed: () {},
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}

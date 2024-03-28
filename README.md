@@ -8,7 +8,7 @@ this application build with a few technology, whice is:
 - Http
 - MVVM
 - Bloc
-- Flutter Secure Sotrage
+- Flutter Secure Storage
 - Url Launcher
   
 ## Features
